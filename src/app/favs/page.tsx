@@ -16,9 +16,13 @@ const FavsPage = () => {
     let newItems = [];
     for (const key in items) {
       if (key !== "ally-supports-cache") {
-        let item = JSON.parse(items[key])
-        item['isFaved']= true
-        newItems.push(item);
+        try{
+          let item = JSON.parse(items[key])
+          item['isFaved']= true
+          newItems.push(item);
+        }catch(error){
+          console.log(error)
+        }
       }
     }
     setState((prevState) => ({ ...prevState, animes: newItems }));
