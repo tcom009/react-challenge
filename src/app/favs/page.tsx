@@ -46,7 +46,7 @@ const FavsPage = () => {
       >
         <ArrowLeftIcon />
       </Button>
-      <Text as="h1">My Favorites</Text>
+      <Text >My Favorites</Text>
       <Grid
         my="5"
         gap="2"
