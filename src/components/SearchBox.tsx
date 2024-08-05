@@ -10,8 +10,6 @@ interface PropsI {
   onSubmit?: () => void;
 }
 export default function SearchBox({
-  query,
-  setQuery,
   handleChange,
   handleKeyPress,
   onSubmit,

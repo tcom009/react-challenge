@@ -1,42 +1,34 @@
-
-
-type Media ={
-  id: number, 
-  coverImage: {
-    medium: string
-  }
-  title:{
-    english: string
-    romaji: string
-  }
-}
+import { Media, PageInfo } from "@/types/types";
 
 type Payload = {
-  Page:{
-    media:Media
-  }
-}
+  Page: {
+    media: Media[];
+    pageInfo: PageInfo;
+  };
+};
 
 type Data = {
-  data : Payload
-}
+  data: Payload;
+  errors?: any;
+};
 
-export const searchAnime = ( query: string) => {
+export const searchAnime = async (query: string) => {
   const handleResponse = (response: any) => {
     return response.json().then(function (json: any) {
       return response.ok ? json : Promise.reject(json);
     });
-  }
+  };
 
   const handleData = (data: Data) => {
-    console.log(data.data);
-  }
+    return data.data;
+  };
 
   const handleError = (error: any) => {
-    console.error(error);
-  }
+    console.log(error.message);
+    return error;
+  };
   var aniQuery = `
-  query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+  query ($page: Int, $perPage: Int, $search: String) {
     Page (page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -45,7 +37,7 @@ export const searchAnime = ( query: string) => {
         hasNextPage
         perPage
       }
-      media (id: $id, search: $search) {
+      media (search: $search) {
         id
         title {
           romaji,
@@ -60,9 +52,9 @@ export const searchAnime = ( query: string) => {
   `;
 
   var variables = {
-    search: "Fate/Zero",
+    search: query,
     page: 1,
-    perPage: 10,
+    perPage: 20,
   };
 
   const url = "https://graphql.anilist.co";
@@ -78,11 +70,9 @@ export const searchAnime = ( query: string) => {
     }),
   };
 
-  fetch(url, options).then(handleResponse).then(handleData).catch(handleError);
-
-  return{
-    handleResponse,
-    handleData,
-    handleError
-  };
+  const response = await fetch(url, options)
+    .then(handleResponse)
+    .then(handleData)
+    .catch(handleError);
+  return response;
 };
