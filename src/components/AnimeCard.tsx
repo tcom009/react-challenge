@@ -39,7 +39,7 @@ const AnimeCard = ({ anime, setFavedAnime, isFavoriteCard }: PropsI) => {
         <Avatar size="5" src={coverImage.medium} fallback={title.english} />
         <Box>
           <Flex mt="3"align="center" justify="between" direction="row" width="100%" px="2" gap="2">
-            <Text as="div" size="2" weight="bold" align="Left">
+            <Text as="div" size="2" weight="bold" align="left">
               {title.english
                 ? shortenText(title.english)
                 : shortenText(title.romaji)}
