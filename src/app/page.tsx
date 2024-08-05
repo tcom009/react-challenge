@@ -7,7 +7,7 @@ import { searchAnime } from "@/hooks/searchAnime";
 import { Media, PageInfo } from "@/types/types";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { routes } from '@/routes'
+import { routes } from "@/routes";
 export enum PageStatus {
   IDLE = "IDLE",
   LOADING = "LOADING",
@@ -58,6 +58,17 @@ export default function Home() {
       console.log(query);
     }
   };
+
+  const checkIsFav = (animes: Media[]) => {
+    return animes.map((anime) => {
+      if (localStorage.getItem(anime.id.toString())) {
+        return { ...anime, isFaved: true };
+      } else {
+        return { ...anime, isFaved: false };
+      }
+    });
+  };
+
   const handleKeyPress = async (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -67,10 +78,11 @@ export default function Home() {
       if (data.errors) {
         setState({ ...state, pageStatus: PageStatus.ERROR });
       } else {
+        const syncData = checkIsFav(data.Page.media)
         setState((prevState) => ({
           ...prevState,
           pageStatus: PageStatus.SUCCESS,
-          animes: data?.Page?.media,
+          animes: syncData,
           pageInfo: data?.Page?.pageInfo,
         }));
       }
@@ -88,20 +100,24 @@ export default function Home() {
   return (
     <main>
       <Grid my="5">
-        
-          <SearchBox
-            onSubmit={onSubmit}
-            handleChange={handleOnChange}
-            handleKeyPress={handleKeyPress}
-            setQuery={setQuery}
-            query={query}
-          />
-        
-          <Flex mt="4">
-            <Button size="1" onClick={() =>{router.push(routes.favorites)}}>
-              Go to my favorites <HeartFilledIcon />
-            </Button>
-          </Flex>
+        <SearchBox
+          onSubmit={onSubmit}
+          handleChange={handleOnChange}
+          handleKeyPress={handleKeyPress}
+          setQuery={setQuery}
+          query={query}
+        />
+
+        <Flex mt="4">
+          <Button
+            size="1"
+            onClick={() => {
+              router.push(routes.favorites);
+            }}
+          >
+            Go to my favorites <HeartFilledIcon />
+          </Button>
+        </Flex>
         {pageStatus === PageStatus.IDLE && (
           <Grid justify="center" align="center" mt="5">
             <Text align="center">Search an Anime!</Text>
