@@ -8,7 +8,8 @@ import { Media, PageInfo } from "@/types/types";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { routes } from "@/routes";
-export enum PageStatus {
+
+enum PageStatus {
   IDLE = "IDLE",
   LOADING = "LOADING",
   SUCCESS = "SUCCESS",
